@@ -9,3 +9,9 @@
 *.zip
 .pytest_cache
 __pycache__
+*.pyc
+.venv
+venv
+env
+ENV
+*.log
