@@ -1,0 +1,32 @@
+services:
+  staatsoper-scraper:
+    container_name: staatsoper-scraper
+    build:
+      context: ./scraper
+    environment:
+      - TZ=Europe/Vienna
+      - FUNCTIONS_WORKER_RUNTIME=python
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1;
+      # Queue configuration
+      - QUEUE_NAME=scraper-result-queue
+      # Telegram configuration - set these in your .env file (see .env.example)
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+    env_file:
+      - .env
+    ports:
+      - "7072:80"
+
+  azurite:
+    container_name: staatsoper-azurite
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    ports:
+      - "10000:10000"  # Blob service
+      - "10001:10001"  # Queue service
+      - "10002:10002"  # Table service
+    volumes:
+      - azurite-data:/data
+    command: "azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --location /data --debug /data/debug.log"
+
+volumes:
+  azurite-data:

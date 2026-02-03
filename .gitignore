@@ -1,0 +1,11 @@
+# Ignore build and IDE files
+**/*/bin
+**/*/.vscode
+/**/.idea/*
+/**/.vscode/*
+**/*/local.settings.json
+
+.env
+*.zip
+.pytest_cache
+__pycache__
